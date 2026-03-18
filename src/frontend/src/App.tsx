@@ -5,12 +5,24 @@ import {
   Mail,
   Menu,
   MessageCircle,
+  Sparkles,
   X,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const WHATSAPP_URL = "https://wa.me/923001234567";
+const INSTAGRAM_URL = "https://ig.me/m/kashnoor";
+
+type Category = "earrings" | "rings" | "bracelets" | "chains" | "handmade";
+
+const CATEGORIES: { id: Category; label: string; emoji: string }[] = [
+  { id: "earrings", label: "Earrings", emoji: "✦" },
+  { id: "rings", label: "Rings", emoji: "◈" },
+  { id: "bracelets", label: "Bracelets", emoji: "◉" },
+  { id: "chains", label: "Chains", emoji: "◆" },
+  { id: "handmade", label: "Handmade", emoji: "♡" },
+];
 
 const products = [
   {
@@ -19,6 +31,7 @@ const products = [
     price: "Rs. 1,800",
     image: "/assets/generated/handmade-jewelry-1.dim_600x700.jpg",
     tag: "Artisan",
+    category: "handmade" as Category,
   },
   {
     id: 5,
@@ -26,6 +39,7 @@ const products = [
     price: "Rs. 950",
     image: "/assets/generated/handmade-bracelet.dim_600x700.jpg",
     tag: "Handmade",
+    category: "bracelets" as Category,
   },
   {
     id: 6,
@@ -33,6 +47,7 @@ const products = [
     price: "Rs. 199",
     image: "/assets/uploads/724eea7bffb51b1e545ce2e54bf46a3b-1.jpg",
     tag: "New",
+    category: "chains" as Category,
   },
   {
     id: 7,
@@ -40,6 +55,7 @@ const products = [
     price: "Rs. 199",
     image: "/assets/uploads/17f587203c4ed3fe5b778b2f186f56d0-2.jpg",
     tag: "Handmade",
+    category: "earrings" as Category,
   },
   {
     id: 8,
@@ -47,6 +63,7 @@ const products = [
     price: "Rs. 199",
     image: "/assets/uploads/00b9345e25a19f62b3973fd2d3130cbc-3.jpg",
     tag: "Handmade",
+    category: "earrings" as Category,
   },
   {
     id: 9,
@@ -54,6 +71,7 @@ const products = [
     price: "Rs. 199",
     image: "/assets/uploads/fdfa1da74f05408bb7d40f9886d767f1-4.jpg",
     tag: "Handmade",
+    category: "earrings" as Category,
   },
   {
     id: 10,
@@ -61,6 +79,47 @@ const products = [
     price: "Rs. 199",
     image: "/assets/uploads/6fd89b1d58f654ecec9136aef027473d-6.jpg",
     tag: "New",
+    category: "earrings" as Category,
+  },
+  {
+    id: 11,
+    name: "Gold Leaf Stud Earrings",
+    price: "Rs. 249",
+    image: "/assets/uploads/9a258fb411ea1ada05d240c67ab625f9-1.jpg",
+    tag: "New",
+    category: "earrings" as Category,
+  },
+  {
+    id: 12,
+    name: "Gold Nail Bangle Bracelet",
+    price: "Rs. 249",
+    image: "/assets/uploads/b4f2488ab451083e14a9ba7568a884af-2.jpg",
+    tag: "Bestseller",
+    category: "bracelets" as Category,
+  },
+  {
+    id: 13,
+    name: "Gold Nail Bangle – Styled",
+    price: "Rs. 249",
+    image: "/assets/uploads/6facbf98a50181d4e0797bc0f9c6a118-3.jpg",
+    tag: "Bestseller",
+    category: "bracelets" as Category,
+  },
+  {
+    id: 14,
+    name: "Gold Leaf Earrings – On Model",
+    price: "Rs. 249",
+    image: "/assets/uploads/43ddbbb42edc14781d582f2650b4397e-1--4.jpg",
+    tag: "New",
+    category: "earrings" as Category,
+  },
+  {
+    id: 15,
+    name: "Gold Nail Bangle – Flat Lay",
+    price: "Rs. 249",
+    image: "/assets/uploads/6612c3830e721b9c6f2fbd5526961e81-5.jpg",
+    tag: "New",
+    category: "bracelets" as Category,
   },
 ];
 
@@ -70,6 +129,42 @@ const navLinks = [
   { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
+
+const WhatsAppIcon = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+  </svg>
+);
+
+const WhatsAppIconLg = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+  </svg>
+);
+
+const WhatsAppIconXl = () => (
+  <svg
+    width="28"
+    height="28"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+  </svg>
+);
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -251,15 +346,20 @@ function HeroSection() {
 function ProductCard({
   product,
   index,
-}: { product: (typeof products)[0]; index: number }) {
+  categoryIndex,
+}: {
+  product: (typeof products)[0];
+  index: number;
+  categoryIndex: number;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: (index % 3) * 0.1 }}
-      className="group bg-card border border-border rounded-2xl overflow-hidden shadow-xs hover:shadow-card-hover transition-all duration-300 cursor-pointer"
-      data-ocid={`shop.item.${index + 1}`}
+      className="group bg-card border border-border rounded-2xl overflow-hidden shadow-xs hover:shadow-card-hover transition-all duration-300"
+      data-ocid={`shop.item.${categoryIndex + 1}`}
     >
       <div className="relative overflow-hidden aspect-[5/6] bg-secondary">
         <img
@@ -280,33 +380,157 @@ function ProductCard({
           {product.price}
         </p>
         <a
-          href={WHATSAPP_URL}
+          href={INSTAGRAM_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-brand-muted hover:text-brand-accent font-sans text-xs font-medium tracking-wide uppercase transition-colors group/link"
-          data-ocid={`shop.view_button.${index + 1}`}
+          className="inline-flex items-center gap-2 text-white font-sans text-xs font-semibold px-4 py-2 rounded-full hover:opacity-90 transition-all hover:shadow-sm w-full justify-center"
+          style={{
+            background: "linear-gradient(to right, #f9ce34, #ee2a7b, #6228d7)",
+          }}
+          data-ocid={`shop.instagram.button.${categoryIndex + 1}`}
         >
-          View Details
-          <ChevronRight
-            size={13}
-            className="group-hover/link:translate-x-0.5 transition-transform"
-          />
+          <Instagram size={14} />
+          Order on Instagram
         </a>
       </div>
     </motion.div>
   );
 }
 
+function ComingSoonCard() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.96 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className="col-span-full flex flex-col items-center justify-center py-20 px-8 bg-card border border-dashed border-brand-accent/30 rounded-2xl text-center"
+      data-ocid="shop.rings.empty_state"
+    >
+      <div className="w-16 h-16 rounded-full bg-brand-secondary flex items-center justify-center mb-5">
+        <Sparkles size={24} className="text-brand-accent" />
+      </div>
+      <h3 className="font-serif text-2xl font-semibold text-brand-text mb-2">
+        Coming Soon
+      </h3>
+      <p className="font-sans text-sm text-brand-muted max-w-xs leading-relaxed mb-6">
+        Our rings collection is being carefully crafted. Be the first to know
+        when it launches.
+      </p>
+      <a
+        href={INSTAGRAM_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 text-white font-sans text-xs font-semibold px-6 py-2.5 rounded-full hover:opacity-90 transition-all"
+        style={{
+          background: "linear-gradient(to right, #f9ce34, #ee2a7b, #6228d7)",
+        }}
+        data-ocid="shop.rings.notify_button"
+      >
+        <Instagram size={14} />
+        Notify Me on Instagram
+      </a>
+    </motion.div>
+  );
+}
+
+function CategoryNav({
+  activeCategory,
+  onSelect,
+}: {
+  activeCategory: Category;
+  onSelect: (cat: Category) => void;
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll active pill into view
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const activeBtn = container.querySelector(
+      `[data-catid="${activeCategory}"]`,
+    ) as HTMLElement | null;
+    if (activeBtn) {
+      activeBtn.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  }, [activeCategory]);
+
+  return (
+    <div
+      ref={scrollRef}
+      className="flex gap-2 md:gap-3 overflow-x-auto pb-1 scrollbar-none md:justify-center"
+      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      role="tablist"
+      aria-label="Product categories"
+    >
+      {CATEGORIES.map((cat) => (
+        <button
+          key={cat.id}
+          type="button"
+          role="tab"
+          aria-selected={activeCategory === cat.id}
+          data-catid={cat.id}
+          onClick={() => onSelect(cat.id)}
+          className={`shrink-0 inline-flex items-center gap-1.5 font-sans text-xs font-semibold tracking-wide uppercase px-5 py-2.5 rounded-full border transition-all duration-200 ${
+            activeCategory === cat.id
+              ? "bg-brand-accent text-white border-brand-accent shadow-sm scale-105"
+              : "bg-card text-brand-muted border-border hover:border-brand-accent hover:text-brand-accent hover:scale-[1.02]"
+          }`}
+          data-ocid={`shop.${cat.id}.tab`}
+        >
+          <span className="text-[11px] opacity-70">{cat.emoji}</span>
+          {cat.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function ShopSection() {
+  const [activeCategory, setActiveCategory] = useState<Category>("earrings");
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+
+  const scrollToCategory = (cat: Category) => {
+    setActiveCategory(cat);
+    const el = sectionRefs.current[cat];
+    if (el) {
+      const offset = 140;
+      const top = el.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
+  };
+
+  // Update active pill based on scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      let current: Category = "earrings";
+      for (const cat of CATEGORIES) {
+        const el = sectionRefs.current[cat.id];
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 160) current = cat.id;
+        }
+      }
+      setActiveCategory(current);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <section id="shop" className="py-24 bg-brand-secondary">
       <div className="max-w-6xl mx-auto px-6">
+        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
           <span className="font-sans text-xs tracking-[0.25em] uppercase text-brand-accent font-medium">
             Handpicked for You
@@ -317,31 +541,99 @@ function ShopSection() {
           <div className="mt-5 mx-auto w-16 h-0.5 bg-brand-accent rounded-full" />
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {products.map((p, i) => (
-            <ProductCard key={p.id} product={p} index={i} />
-          ))}
+        {/* Sticky category navigation bar */}
+        <div className="sticky top-16 md:top-20 z-30 bg-brand-secondary/95 backdrop-blur-sm pt-4 pb-4 mb-12 -mx-6 px-6 border-b border-border/60">
+          <CategoryNav
+            activeCategory={activeCategory}
+            onSelect={scrollToCategory}
+          />
         </div>
 
+        {/* Category sections */}
+        <div className="space-y-20">
+          {CATEGORIES.map((cat) => {
+            const catProducts = products.filter((p) => p.category === cat.id);
+            return (
+              <div
+                key={cat.id}
+                ref={(el) => {
+                  sectionRefs.current[cat.id] = el;
+                }}
+                id={`shop-${cat.id}`}
+              >
+                {/* Category heading */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="mb-8"
+                >
+                  <div className="flex items-center gap-4">
+                    <h3 className="font-serif text-2xl md:text-3xl font-bold text-brand-text whitespace-nowrap">
+                      {cat.label}
+                    </h3>
+                    <div className="flex-1 h-px bg-border" />
+                    {catProducts.length > 0 && (
+                      <span className="font-sans text-xs text-brand-muted tracking-wide shrink-0">
+                        {catProducts.length} piece
+                        {catProducts.length !== 1 ? "s" : ""}
+                      </span>
+                    )}
+                  </div>
+                </motion.div>
+
+                {/* Products grid or coming soon */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                  {cat.id === "rings" ? (
+                    <ComingSoonCard />
+                  ) : catProducts.length === 0 ? (
+                    <div
+                      className="col-span-full py-12 text-center font-sans text-sm text-brand-muted"
+                      data-ocid={`shop.${cat.id}.empty_state`}
+                    >
+                      No products yet in this category.
+                    </div>
+                  ) : (
+                    catProducts.map((p, i) => (
+                      <ProductCard
+                        key={p.id}
+                        product={p}
+                        index={i}
+                        categoryIndex={i}
+                      />
+                    ))
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Custom order CTA */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-14"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-center mt-20"
         >
           <p className="font-sans text-sm text-brand-muted mb-5">
             Want something custom? We create bespoke pieces just for you.
           </p>
           <a
-            href={WHATSAPP_URL}
+            href={INSTAGRAM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-brand-accent text-white font-sans text-sm font-semibold px-8 py-3.5 rounded-full hover:opacity-90 transition-all hover:shadow-card"
+            className="inline-flex items-center gap-2 text-white font-sans text-sm font-semibold px-8 py-3.5 rounded-full hover:opacity-90 transition-all hover:shadow-card"
+            style={{
+              background:
+                "linear-gradient(to right, #f9ce34, #ee2a7b, #6228d7)",
+            }}
             data-ocid="shop.custom_order_button"
           >
-            <MessageCircle size={16} />
-            Request Custom Order
+            <Instagram size={16} />
+            Request Custom Order on Instagram
           </a>
         </motion.div>
       </div>
@@ -469,15 +761,7 @@ function ContactSection() {
               className="inline-flex items-center gap-3 bg-[#25D366] text-white font-sans text-sm font-semibold px-10 py-4 rounded-full hover:opacity-90 transition-all hover:shadow-card w-full sm:w-auto justify-center"
               data-ocid="contact.whatsapp_button"
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-              </svg>
+              <WhatsAppIconLg />
               Chat on WhatsApp
             </a>
 
@@ -535,17 +819,10 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white/60 hover:bg-white/20 hover:text-white transition-all"
+              aria-label="WhatsApp"
             >
               <span className="sr-only">WhatsApp</span>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-              </svg>
+              <WhatsAppIcon />
             </a>
             <a
               href="mailto:hello@kashnoor.com"
@@ -555,7 +832,7 @@ function Footer() {
               <Mail size={15} />
             </a>
             <a
-              href="https://instagram.com/kashnoor"
+              href={INSTAGRAM_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white/60 hover:bg-white/20 hover:text-white transition-all"
@@ -603,15 +880,7 @@ function FloatingWhatsApp() {
       data-ocid="whatsapp.button"
     >
       <span className="sr-only">Chat on WhatsApp</span>
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-      </svg>
+      <WhatsAppIconXl />
     </motion.a>
   );
 }
