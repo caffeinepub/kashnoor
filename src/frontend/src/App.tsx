@@ -14,27 +14,6 @@ const WHATSAPP_URL = "https://wa.me/923001234567";
 
 const products = [
   {
-    id: 1,
-    name: "Pearl Drop Earrings",
-    price: "Rs. 1,200",
-    image: "/assets/generated/pearl-earrings-1.dim_600x700.jpg",
-    tag: "Bestseller",
-  },
-  {
-    id: 2,
-    name: "Pearl Stud Earrings",
-    price: "Rs. 850",
-    image: "/assets/generated/pearl-studs.dim_600x700.jpg",
-    tag: "Classic",
-  },
-  {
-    id: 3,
-    name: "Pearl Pendant Necklace",
-    price: "Rs. 1,500",
-    image: "/assets/generated/pearl-necklace.dim_600x700.jpg",
-    tag: "New",
-  },
-  {
     id: 4,
     name: "Handmade Floral Piece",
     price: "Rs. 1,800",
@@ -47,6 +26,41 @@ const products = [
     price: "Rs. 950",
     image: "/assets/generated/handmade-bracelet.dim_600x700.jpg",
     tag: "Handmade",
+  },
+  {
+    id: 6,
+    name: "Two-Tone Chain Necklace",
+    price: "Rs. 199",
+    image: "/assets/uploads/724eea7bffb51b1e545ce2e54bf46a3b-1.jpg",
+    tag: "New",
+  },
+  {
+    id: 7,
+    name: "Crystal Drop Earrings – Pink",
+    price: "Rs. 199",
+    image: "/assets/uploads/17f587203c4ed3fe5b778b2f186f56d0-2.jpg",
+    tag: "Handmade",
+  },
+  {
+    id: 8,
+    name: "Crystal Drop Earrings – Green",
+    price: "Rs. 199",
+    image: "/assets/uploads/00b9345e25a19f62b3973fd2d3130cbc-3.jpg",
+    tag: "Handmade",
+  },
+  {
+    id: 9,
+    name: "Crystal Drop Earrings – Blue",
+    price: "Rs. 199",
+    image: "/assets/uploads/fdfa1da74f05408bb7d40f9886d767f1-4.jpg",
+    tag: "Handmade",
+  },
+  {
+    id: 10,
+    name: "Gold Triple Hoop Earrings",
+    price: "Rs. 199",
+    image: "/assets/uploads/6fd89b1d58f654ecec9136aef027473d-6.jpg",
+    tag: "New",
   },
 ];
 
@@ -83,7 +97,6 @@ function Navbar() {
     >
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Mobile menu toggle */}
           <button
             type="button"
             className="md:hidden text-foreground p-2"
@@ -94,7 +107,6 @@ function Navbar() {
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
 
-          {/* Desktop nav left */}
           <nav className="hidden md:flex items-center gap-8 flex-1">
             {navLinks.slice(0, 2).map((link) => (
               <button
@@ -109,7 +121,6 @@ function Navbar() {
             ))}
           </nav>
 
-          {/* Logo centered */}
           <button
             type="button"
             onClick={() => handleNav("#home")}
@@ -119,7 +130,6 @@ function Navbar() {
             Kashnoor
           </button>
 
-          {/* Desktop nav right */}
           <nav className="hidden md:flex items-center gap-8 flex-1 justify-end">
             {navLinks.slice(2).map((link) => (
               <button
@@ -134,7 +144,6 @@ function Navbar() {
             ))}
           </nav>
 
-          {/* Mobile whatsapp */}
           <a
             href={WHATSAPP_URL}
             target="_blank"
@@ -147,7 +156,6 @@ function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -181,7 +189,6 @@ function HeroSection() {
       id="home"
       className="relative min-h-[92vh] flex items-center overflow-hidden"
     >
-      {/* Background image */}
       <div className="absolute inset-0">
         <img
           src="/assets/generated/kashnoor-hero.dim_1400x800.jpg"
@@ -250,7 +257,7 @@ function ProductCard({
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
+      transition={{ duration: 0.5, delay: (index % 3) * 0.1 }}
       className="group bg-card border border-border rounded-2xl overflow-hidden shadow-xs hover:shadow-card-hover transition-all duration-300 cursor-pointer"
       data-ocid={`shop.item.${index + 1}`}
     >
@@ -362,7 +369,6 @@ function AboutSection() {
                 loading="lazy"
               />
             </div>
-            {/* Decorative accent */}
             <div className="absolute -bottom-4 -right-4 w-24 h-24 rounded-2xl bg-brand-secondary border border-border -z-10" />
             <div className="absolute -top-4 -left-4 w-16 h-16 rounded-xl bg-brand-secondary border border-border -z-10" />
           </motion.div>
