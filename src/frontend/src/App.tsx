@@ -12,7 +12,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 const WHATSAPP_URL = "https://wa.me/923001234567";
-const INSTAGRAM_URL = "https://ig.me/m/kashnoor";
+const INSTAGRAM_URL =
+  "https://www.instagram.com/kashnoorbyk.in?igsh=MTFvMW1qY25zYXQxNQ==";
 
 type Category = "earrings" | "rings" | "bracelets" | "chains" | "handmade";
 
@@ -26,52 +27,12 @@ const CATEGORIES: { id: Category; label: string; emoji: string }[] = [
 
 const products = [
   {
-    id: 4,
-    name: "Handmade Floral Piece",
-    price: "Rs. 1,800",
-    image: "/assets/generated/handmade-jewelry-1.dim_600x700.jpg",
-    tag: "Artisan",
-    category: "handmade" as Category,
-  },
-  {
-    id: 5,
-    name: "Rose Quartz Bracelet",
-    price: "Rs. 950",
-    image: "/assets/generated/handmade-bracelet.dim_600x700.jpg",
-    tag: "Handmade",
-    category: "bracelets" as Category,
-  },
-  {
     id: 6,
     name: "Two-Tone Chain Necklace",
     price: "Rs. 199",
     image: "/assets/uploads/724eea7bffb51b1e545ce2e54bf46a3b-1.jpg",
     tag: "New",
     category: "chains" as Category,
-  },
-  {
-    id: 7,
-    name: "Crystal Drop Earrings – Pink",
-    price: "Rs. 199",
-    image: "/assets/uploads/17f587203c4ed3fe5b778b2f186f56d0-2.jpg",
-    tag: "Handmade",
-    category: "earrings" as Category,
-  },
-  {
-    id: 8,
-    name: "Crystal Drop Earrings – Green",
-    price: "Rs. 199",
-    image: "/assets/uploads/00b9345e25a19f62b3973fd2d3130cbc-3.jpg",
-    tag: "Handmade",
-    category: "earrings" as Category,
-  },
-  {
-    id: 9,
-    name: "Crystal Drop Earrings – Blue",
-    price: "Rs. 199",
-    image: "/assets/uploads/fdfa1da74f05408bb7d40f9886d767f1-4.jpg",
-    tag: "Handmade",
-    category: "earrings" as Category,
   },
   {
     id: 10,
@@ -95,30 +56,6 @@ const products = [
     price: "Rs. 249",
     image: "/assets/uploads/b4f2488ab451083e14a9ba7568a884af-2.jpg",
     tag: "Bestseller",
-    category: "bracelets" as Category,
-  },
-  {
-    id: 13,
-    name: "Gold Nail Bangle – Styled",
-    price: "Rs. 249",
-    image: "/assets/uploads/6facbf98a50181d4e0797bc0f9c6a118-3.jpg",
-    tag: "Bestseller",
-    category: "bracelets" as Category,
-  },
-  {
-    id: 14,
-    name: "Gold Leaf Earrings – On Model",
-    price: "Rs. 249",
-    image: "/assets/uploads/43ddbbb42edc14781d582f2650b4397e-1--4.jpg",
-    tag: "New",
-    category: "earrings" as Category,
-  },
-  {
-    id: 15,
-    name: "Gold Nail Bangle – Flat Lay",
-    price: "Rs. 249",
-    image: "/assets/uploads/6612c3830e721b9c6f2fbd5526961e81-5.jpg",
-    tag: "New",
     category: "bracelets" as Category,
   },
 ];
@@ -655,8 +592,8 @@ function AboutSection() {
           >
             <div className="aspect-[4/5] rounded-3xl overflow-hidden">
               <img
-                src="/assets/generated/handmade-jewelry-1.dim_600x700.jpg"
-                alt="Kashnoor handmade jewellery craftsmanship"
+                src="/assets/uploads/9a258fb411ea1ada05d240c67ab625f9-1.jpg"
+                alt="Kashnoor gold leaf earrings"
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
